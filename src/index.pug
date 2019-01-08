@@ -1,0 +1,20 @@
+doctype html
+html(lang="ja")
+  head
+    meta(charset="utf-8")
+    link(rel="stylesheet" href="https://unpkg.com/jpn.css@latest/dist/bootstrap/jpn.min.css")
+    link(rel="stylesheet" href="//cdn.materialdesignicons.com/3.3.92/css/materialdesignicons.min.css")
+    link(rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous")
+    - if (global.process.env.NODE_ENV === "production")
+      link(rel="stylesheet" href="style.css")
+    - else
+      script(src="style.js")
+    title !!!TITLE!!!
+    script(type="text/javascript").
+      // console.log("Hello")
+  body
+    // comment
+    #app
+    script(src="main.js")
+
+
