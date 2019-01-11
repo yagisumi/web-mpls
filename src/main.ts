@@ -26,8 +26,11 @@ new Vue({
     return new AppData()
   },
   methods: {
-    msg(error: Error) {
-      return error.message
+    name(item: FileInfo, suffix: string) {
+      return `${item.name}${suffix}`
+    },
+    error_message(error: Error) {
+      return error.stack || error.message
     },
     isDropped() {
       return !this.isDragOver && this.mpls_ary.length !== 0
@@ -91,6 +94,39 @@ new Vue({
 
       return info.join("\n")
     },
+    output_ogg(data: mpls.MPLS) {
+      const info: Array<string> = []
+
+      data.playlist_mark.entries.forEach((entry, idx) => {
+        const nn = ("0" + (idx + 1)).slice(-2)
+        info.push(`CHAPTER${nn}=${entry._abs_start_hhmmss}`)
+        info.push(`CHAPTER${nn}NAME=Chapter ${idx + 1}`)
+      })
+
+      return info.join("\n")
+    },
+    output_simple(data: mpls.MPLS) {
+      const info: Array<string> = []
+
+      data.playlist_mark.entries.forEach((entry, idx) => {
+        const nn = ("0" + (idx + 1)).slice(-2)
+        info.push(`${entry._abs_start_hhmmss} Chapter ${idx + 1}`)
+      })
+
+      return info.join("\n")
+    },
+    output_dump(data: mpls.MPLS) {
+      return JSON.stringify(data, null, 2)
+    },
+    download(event: MouseEvent) {
+      const elem = event.target as HTMLAnchorElement
+      const mime = elem.getAttribute("data-mime") || "text/plain"
+      const text = elem.getAttribute("data-text")
+      if (text) {
+        const blob = new Blob([text], { type: mime })
+        elem.href = URL.createObjectURL(blob)
+      }
+    },
     dragenter(event: DragEvent) {
       this.drag_counter += 1
 
@@ -136,7 +172,6 @@ new Vue({
       this.mpls_ary.splice(0, this.mpls_ary.length)
       for (let file of files) {
         if (!file.name.match(/\.mpls$/)) {
-          console.error("File extension is not `mpls`.")
           this.mpls_ary.push({
             name: file.name,
             error: new Error("File extension is not `mpls`."),
@@ -146,7 +181,6 @@ new Vue({
         }
 
         if (file.size > 1024 * 1024) {
-          console.error("The file size is too large.")
           this.mpls_ary.push({
             name: file.name,
             error: new Error("The file size is too large."),
@@ -166,7 +200,6 @@ new Vue({
         r.onload = (event: Event) => {
           try {
             const dump = mpls(r.result as ArrayBuffer)
-            console.log(dump)
             this.mpls_ary.push({
               name: file.name,
               error: null,

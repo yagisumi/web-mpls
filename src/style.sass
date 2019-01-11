@@ -22,6 +22,8 @@ $rem: 16px
   margin: 0
   padding: 0
 
+html
+  font-size: rem(1)
 body
   background-color: #eee
   color: #333
@@ -30,6 +32,7 @@ body
   font-family: Inconsolata
 textarea
   border: none
+  font-family: Inconsolata
 pre, code, tt
   font-family: Inconsolata
   font-size: rem(1)
@@ -53,7 +56,6 @@ pre, code, tt
   transition: all 300ms 0s ease
   &.dragover
     background-color: rgba($theme-color, 0.3)
-    border-style: dotted
   .file_input
     font-size: rem(1)
     text-align: center
@@ -123,7 +125,12 @@ pre, code, tt
     padding: 0
 .output
   textarea
-    min-height: rem(6)
+    min-height: rem(12)
+    overflow: scroll
+    font-size: rem(1)
+    padding: rem(0.4)
+    outline: none
+    background-color: #fff
 ul.tabs
   list-style: none
   display: flex
@@ -141,13 +148,35 @@ ul.tabs
       cursor: pointer
       user-select: none
       margin-bottom: -1px
-      border: solid 1px gray
       border-bottom: solid 1px gray
-      border-radius: 5px 5px 0 0
-      background-color: #eee
+      border-top: solid 3px #aaa
+      background-color: #fff
+      border-right: solid 1px gray
       &:hover
-        background-color: #fff
+        background-color: rgba($theme-color, 0.2)
+    &:first-child
+      a
+        border-left: solid 1px gray
     &.selected
       a
+        border-top: solid 3px $theme-color
         background-color: #fff
         border-bottom-color: #fff
+.down-link
+  justify-content: flex-end
+  span
+    margin-right: rem(2)
+  a
+    cursor: pointer
+    text-decoration: none
+    display: inline-block
+    color: $theme-color
+    background-color: $theme-color2
+    border: solid 1px $theme-color
+    padding: rem(0.3) rem(1.5)
+    border-radius: rem(0.2)
+    transition: all 100ms 0s ease
+    &:hover
+      color: $theme-color2
+      border-color: $theme-color
+      background-color: $theme-color

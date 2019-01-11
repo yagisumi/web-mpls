@@ -2,8 +2,7 @@ doctype html
 html(lang="ja")
   head
     meta(charset="utf-8")
-    link(rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous")
-    link(href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet")
+    link(href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type='text/css')
     - if (global.process.env.NODE_ENV === "production")
       link(rel="stylesheet" href="style.css")
     - else
@@ -13,7 +12,7 @@ html(lang="ja")
     script(src="/mpls.js")
     script(src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js")
     // script(type="text/javascript").
-      // console.log("Hello")
+    //   console.log("Hello")
   body
     // comment
     .header.theme.center .mpls to chapter
@@ -25,10 +24,10 @@ html(lang="ja")
             input(type="file" multiple @change="selected")
       .mpls_list(v-if="mpls_ary.length > 0")
         .file.table-col.border.shadow(v-for="(item, idx) in mpls_ary" :key="idx")
-          .name.table-cell.grow1.theme.border-bottom
+          .name.table-cell.grow1.theme
             | {{ item.name }}
-          .error.table-cell.grow1.padding(v-if="item.error")
-            | {{ item.error.message }}
+          pre.error.table-cell.grow1.padding(v-if="item.error")
+            | {{ error_message(item.error) }}
           .mpls.table-cell.grow1.table-col(v-else)
             pre.info.table-cell.grow1.padding.border-bottom {{ stream_info(item.mpls) }}
             .table-cell.grow1.table-row
@@ -41,8 +40,19 @@ html(lang="ja")
                     a(@click.prepend.stop="selectedTab = 'simple'") SIMPLE (txt)
                   li.tab.table-cell(:class="{selected: selectedTab === 'dump'}")
                     a(@click.prepend.stop="selectedTab = 'dump'") DUMP (json)
-                textarea.table-cell.grow1
-            pre.dump.table-cell.grow1.border-top {{ JSON.stringify(item.mpls, null, 2) }}
+                textarea.table-cell.grow1(readonly v-show="selectedTab === 'ogg'") {{ output_ogg(item.mpls) }}
+                textarea.table-cell.grow1(readonly v-show="selectedTab === 'simple'") {{ output_simple(item.mpls) }}
+                textarea.table-cell.grow1(readonly v-show="selectedTab === 'dump'") {{ output_dump(item.mpls) }}
+            .down-link.table-cell.grow1.right.border-top.padding
+              .table-cell(v-show="selectedTab === 'ogg'")
+                span {{ item.name + "-OGG.txt" }}
+                a(:download="name(item, '-OGG.txt')" @click.stop="download" data-mime="text/plain" :data-text="output_ogg(item.mpls)") Download
+              .table-cell(v-show="selectedTab === 'simple'")
+                span {{ item.name + "-SIMPLE.txt" }}
+                a(:download="name(item, '-SIMPLE.txt')" @click.stop="download" data-mime="text/plain" :data-text="output_simple(item.mpls)") Download
+              .table-cell(v-show="selectedTab === 'dump'")
+                span {{ item.name + "-DUMP.json" }}
+                a(:download="name(item, '-DUMP.json')" @click.stop="download" data-mime="application/json" :data-text="output_dump(item.mpls)") Download
     script(src="main.js")
 
 
