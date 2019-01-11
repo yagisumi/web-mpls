@@ -2,19 +2,31 @@ doctype html
 html(lang="ja")
   head
     meta(charset="utf-8")
-    link(rel="stylesheet" href="https://unpkg.com/jpn.css@latest/dist/bootstrap/jpn.min.css")
-    link(rel="stylesheet" href="//cdn.materialdesignicons.com/3.3.92/css/materialdesignicons.min.css")
     link(rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous")
+    link(href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet")
     - if (global.process.env.NODE_ENV === "production")
       link(rel="stylesheet" href="style.css")
     - else
       script(src="style.js")
     title !!!TITLE!!!
-    script(type="text/javascript").
+    script(src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js")
+    script(src="/mpls.js")
+    script(src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js")
+    // script(type="text/javascript").
       // console.log("Hello")
   body
     // comment
-    #app
+    .header.theme.center .mpls to chapter
+    #app.container
+      .droparea(:class="{ dropped: mpls_ary.length !== 0}" @dragenter="dragenter" @dragleave="dragleave" @drop="dropped")
+        span Drop mpls files
+        .file
+          label Select File...
+            input(type="file" multiple @change="selected")
+      .mpls_ary(v-if="mpls_ary.length > 0")
+        .mpls(v-for="(item, idx) in mpls_ary" :key="idx")
+          .error(v-if="item.error")
+            | {{ `${item.name}: ${msg(item.error)}` }}
     script(src="main.js")
 
 

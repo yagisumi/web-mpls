@@ -87,7 +87,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 else {
   entryMap['style.js'] = './src/style.js'
-  plugins.push(new webpack.HotModuleReplacementPlugin())
+  // plugins.push(new webpack.HotModuleReplacementPlugin())
 }
 
 const config = {
@@ -100,7 +100,7 @@ const config = {
   },
   devtool: 'source-map',
   devServer: {
-    hot: true,
+    // hot: true,
   },
   module: {
     rules: [
@@ -198,6 +198,9 @@ const config = {
     ]
   },
   plugins: plugins,
+  externals: {
+    'vue': 'Vue'
+  },
 }
 
 module.exports = config

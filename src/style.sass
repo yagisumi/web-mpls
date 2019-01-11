@@ -1,2 +1,78 @@
+$theme-color: #17e
+$theme-color2: #fff
+$rem: 16px
+
+@function rem($n)
+  @return $n * $rem
+
+.theme
+  background-color: $theme-color
+  color: $theme-color2
+.shadow
+  box-shadow: 0px 1px 6px 3px #ddd
+.right
+  text-align: right
+.left
+  text-align: left
+.center
+  text-align: center
+.b
+  font-weight: bold
+
 body
-  background-color: white
+  background-color: #eee
+  color: #333
+  padding: 0
+  margin: 0
+.container
+  max-width: 800px
+  margin: 0 auto
+.header
+  font-size: rem(1.5)
+  padding: rem(0.5)
+.droparea
+  padding: rem(3)
+  margin-top: rem(1)
+  font-size: rem(3)
+  text-align: center
+  color: $theme-color
+  background-color: $theme-color2
+  border: dashed rem(0.2) $theme-color
+  border-radius: rem(0.5)
+  transition: all 300ms 0s ease
+  &.dragover
+    background-color: rgba($theme-color, 0.3)
+    border-style: dotted
+  .file
+    font-size: rem(1)
+    text-align: center
+    padding: rem(1)
+    input
+      display: none
+    label
+      user-select: none
+      padding: rem(0.3) rem(1)
+      color: $theme-color
+      background-color: rgba(255, 255, 255, 0.2)
+      border: solid 1px $theme-color
+      border-radius: 3px
+      transition: all 100ms 0s ease
+      &:hover
+        color: $theme-color2
+        border-color: $theme-color
+        background-color: $theme-color
+      &:focus
+        outline: 0
+        text-decoration: underline
+  &.dropped
+    padding: rem(0.4)
+    font-size: rem(1.5)
+    border-width: rem(0.15)
+    .file
+      display: inline
+      label
+        margin: rem(0.2) rem(0.5)
+        padding: rem(0.1) rem(0.8)
+
+
+
