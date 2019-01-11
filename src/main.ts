@@ -15,6 +15,8 @@ class AppData {
   // empty_mpls_ary = () => {
   //   this.mpls_ary.splice(0, this.mpls_ary.length)
   // }
+  isDragOver = false
+  counter = 0
 }
 
 new Vue({
@@ -25,32 +27,33 @@ new Vue({
     msg(error: Error) {
       return error.message
     },
+    isDropped() {
+      return !this.isDragOver && this.mpls_ary.length !== 0
+    },
     dragenter(event: DragEvent) {
-      if (event.target && event.currentTarget && event.target === event.currentTarget) {
-        if (
-          event.dataTransfer &&
-          event.dataTransfer.types instanceof Array &&
-          event.dataTransfer.types.includes("Files")
-        ) {
-          const droparea = event.target as HTMLElement
-          droparea.classList.add("dragover")
-        }
+      this.counter += 1
+      console.log(this.counter)
+      if (
+        event.dataTransfer &&
+        event.dataTransfer.types instanceof Array &&
+        event.dataTransfer.types.includes("Files")
+      ) {
+        this.isDragOver = true
       }
     },
     dragleave(event: DragEvent) {
+      this.counter -= 1
+      console.log(this.counter)
       if (event.target && event.currentTarget) {
         const droparea = event.currentTarget as HTMLElement
         const enterElem = event.relatedTarget as HTMLElement
         if (!droparea.contains(enterElem)) {
-          droparea.classList.remove("dragover")
+          this.isDragOver = false
         }
       }
     },
     dropped(event: DragEvent) {
-      if (event.target) {
-        const droparea = event.currentTarget as HTMLElement
-        droparea.classList.remove("dragover")
-      }
+      this.isDragOver = false
 
       if (
         event.dataTransfer &&
@@ -129,17 +132,16 @@ new Vue({
     },
   },
   mounted() {
-    document.addEventListener("dragover", function(event) {
+    document.addEventListener("dragenter", this.dragenter)
+    document.addEventListener("dragleave", this.dragleave)
+    document.addEventListener("dragover", (event) => {
       event.preventDefault()
       event.stopPropagation()
     })
-    document.addEventListener("dragleave", function(event) {
+    document.addEventListener("drop", (event) => {
       event.preventDefault()
       event.stopPropagation()
-    })
-    document.addEventListener("drop", function(event) {
-      event.preventDefault()
-      event.stopPropagation()
+      this.dropped(event)
     })
   },
 }).$mount("#app")
