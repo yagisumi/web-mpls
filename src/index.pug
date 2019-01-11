@@ -18,15 +18,31 @@ html(lang="ja")
     // comment
     .header.theme.center .mpls to chapter
     #app.container
-      .droparea(:class="{ dropped: mpls_ary.length !== 0}" @dragenter="dragenter" @dragleave="dragleave" @drop="dropped")
+      .droparea(:class="{ dropped: isDropped(), dragover: isDragOver }")
         span Drop mpls files
-        .file
+        .file_input
           label Select File...
             input(type="file" multiple @change="selected")
-      .mpls_ary(v-if="mpls_ary.length > 0")
-        .mpls(v-for="(item, idx) in mpls_ary" :key="idx")
-          .error(v-if="item.error")
-            | {{ `${item.name}: ${msg(item.error)}` }}
+      .mpls_list(v-if="mpls_ary.length > 0")
+        .file.table-col.border.shadow(v-for="(item, idx) in mpls_ary" :key="idx")
+          .name.table-cell.grow1.theme.border-bottom
+            | {{ item.name }}
+          .error.table-cell.grow1.padding(v-if="item.error")
+            | {{ item.error.message }}
+          .mpls.table-cell.grow1.table-col(v-else)
+            pre.info.table-cell.grow1.padding.border-bottom {{ stream_info(item.mpls) }}
+            .table-cell.grow1.table-row
+              pre.chapters.table-cell.padding {{ chapters_info(item.mpls) }}
+              .output.table-cell.grow1.border-left.table-col
+                ul.tabs.table-cell.table-row
+                  li.tab.table-cell(:class="{selected: selectedTab === 'ogg'}")
+                    a(@click.prepend.stop="selectedTab = 'ogg'") OGG (txt)
+                  li.tab.table-cell(:class="{selected: selectedTab === 'simple'}")
+                    a(@click.prepend.stop="selectedTab = 'simple'") SIMPLE (txt)
+                  li.tab.table-cell(:class="{selected: selectedTab === 'dump'}")
+                    a(@click.prepend.stop="selectedTab = 'dump'") DUMP (json)
+                textarea.table-cell.grow1
+            pre.dump.table-cell.grow1.border-top {{ JSON.stringify(item.mpls, null, 2) }}
     script(src="main.js")
 
 

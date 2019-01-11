@@ -1,3 +1,4 @@
+type OutputFormat = "ogg" | "simple" | "dump"
 type FileInfo =
   | {
       name: string
@@ -16,7 +17,8 @@ class AppData {
   //   this.mpls_ary.splice(0, this.mpls_ary.length)
   // }
   isDragOver = false
-  counter = 0
+  drag_counter = 0
+  selectedTab = "ogg"
 }
 
 new Vue({
@@ -30,30 +32,88 @@ new Vue({
     isDropped() {
       return !this.isDragOver && this.mpls_ary.length !== 0
     },
+    stream_info(data: mpls.MPLS) {
+      const info: Array<string> = []
+
+      data.playlist.playitems.forEach((item, idx) => {
+        info.push(`PLAYITEM ${idx + 1}: "${item.clip_file}" ${item.codec_id} ${item._play_time_hhmmss}`)
+        if (item.stn) {
+          const streams: Array<string> = []
+          for (let stream of item.stn.streams) {
+            switch (stream.attributes._type) {
+              case "video":
+              case "audio":
+                const label: Array<string> = []
+
+                if (stream.attributes._coding_type) {
+                  label.push(stream.attributes._coding_type)
+                }
+
+                if (stream.attributes._format) {
+                  label.push(stream.attributes._format)
+                }
+
+                if (stream.attributes._rate) {
+                  if (stream.attributes._type === "video") {
+                    label.push(stream.attributes._rate + "fps")
+                  } else {
+                    label.push(stream.attributes._rate)
+                  }
+                }
+
+                if (stream.attributes.lang_code) {
+                  info.push(`  [${stream.attributes._type}] ${label.join("/")} (${stream.attributes.lang_code})`)
+                } else {
+                  info.push(`  [${stream.attributes._type}] ${label.join("/")}`)
+                }
+                break
+              case "graphics":
+                info.push(
+                  `  [${stream.attributes._type}] ${stream.attributes._coding_type} (${stream.attributes.lang_code})`
+                )
+                break
+              default:
+                info.push("  [unknown]")
+                break
+            }
+          }
+        }
+      })
+
+      return info.join("\n")
+    },
+    chapters_info(data: mpls.MPLS) {
+      const info: Array<string> = ["Chapters"]
+
+      data.playlist_mark.entries.forEach((entry, idx) => {
+        info.push(`${("  " + (idx + 1)).slice(-3)}: ${entry._abs_start_hhmmss}`)
+      })
+
+      return info.join("\n")
+    },
     dragenter(event: DragEvent) {
-      this.counter += 1
-      console.log(this.counter)
+      this.drag_counter += 1
+
       if (
+        !this.isDragOver &&
         event.dataTransfer &&
         event.dataTransfer.types instanceof Array &&
         event.dataTransfer.types.includes("Files")
       ) {
         this.isDragOver = true
+        window.scrollTo(0, 0)
       }
     },
     dragleave(event: DragEvent) {
-      this.counter -= 1
-      console.log(this.counter)
-      if (event.target && event.currentTarget) {
-        const droparea = event.currentTarget as HTMLElement
-        const enterElem = event.relatedTarget as HTMLElement
-        if (!droparea.contains(enterElem)) {
-          this.isDragOver = false
-        }
+      this.drag_counter -= 1
+
+      if (this.drag_counter <= 0) {
+        this.isDragOver = false
       }
     },
     dropped(event: DragEvent) {
       this.isDragOver = false
+      this.drag_counter = 0
 
       if (
         event.dataTransfer &&
@@ -76,10 +136,10 @@ new Vue({
       this.mpls_ary.splice(0, this.mpls_ary.length)
       for (let file of files) {
         if (!file.name.match(/\.mpls$/)) {
-          console.error("File extension is not mpls.")
+          console.error("File extension is not `mpls`.")
           this.mpls_ary.push({
             name: file.name,
-            error: new Error("File extension is not mpls."),
+            error: new Error("File extension is not `mpls`."),
             mpls: null,
           })
           continue

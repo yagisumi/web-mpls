@@ -18,12 +18,23 @@ $rem: 16px
   text-align: center
 .b
   font-weight: bold
+.zero
+  margin: 0
+  padding: 0
 
 body
   background-color: #eee
   color: #333
   padding: 0
   margin: 0
+  font-family: Inconsolata
+textarea
+  border: none
+pre, code, tt
+  font-family: Inconsolata
+  font-size: rem(1)
+  margin: 0
+  padding: rem(0.3)
 .container
   max-width: 800px
   margin: 0 auto
@@ -43,7 +54,7 @@ body
   &.dragover
     background-color: rgba($theme-color, 0.3)
     border-style: dotted
-  .file
+  .file_input
     font-size: rem(1)
     text-align: center
     padding: rem(1)
@@ -68,11 +79,75 @@ body
     padding: rem(0.4)
     font-size: rem(1.5)
     border-width: rem(0.15)
-    .file
+    .file_input
       display: inline
       label
         margin: rem(0.2) rem(0.5)
         padding: rem(0.1) rem(0.8)
 
-
-
+.table-col
+  display: flex
+  flex-direction: column
+.table-row
+  display: flex
+  flex-direction: row
+.border
+  border: solid 1px gray
+.table-cell
+  margin: 0
+  padding: 0
+  &.grow1
+    flex-grow: 1
+  &.grow2
+    flex-grow: 2
+  &.padding
+    padding: rem(0.3) rem(1)
+  &.border-top
+    border-top: solid 1px gray
+  &.border-bottom
+    border-bottom: solid 1px gray
+  &.border-left
+    border-left: solid 1px gray
+  &.border-right
+    border-right: solid 1px gray
+.file
+  background-color: #fff
+  margin: rem(2) 0
+  font-family: Inconsolata
+  .name
+    padding: rem(0.6) rem(1)
+  .error
+    color: #f00
+  .mpls
+    margin: 0
+    padding: 0
+.output
+  textarea
+    min-height: rem(6)
+ul.tabs
+  list-style: none
+  display: flex
+  padding: 0 rem(1)
+  margin: 0
+  border-bottom: solid 1px gray
+  li.tab
+    margin: 0
+    padding: 0
+    padding-top: rem(0.5)
+    display: flex
+    a
+      display: flex
+      padding: rem(0.4) rem(0.8)
+      cursor: pointer
+      user-select: none
+      margin-bottom: -1px
+      border: solid 1px gray
+      border-bottom: solid 1px gray
+      border-radius: 5px 5px 0 0
+      background-color: #eee
+      &:hover
+        background-color: #fff
+    &.selected
+      a
+        background-color: #fff
+        border-bottom-color: #fff
