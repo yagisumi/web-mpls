@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+// const CopyWebpackPlugin = require('copy-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 // const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CleanWebpackPlugin = require('clean-webpack-plugin')
@@ -66,12 +66,12 @@ const plugins = [
   new ExtractTextPlugin('[name]'),
   new CleanWebpackPlugin(['dist']),
   new VueLoaderPlugin(),
-  new CopyWebpackPlugin([
-    {
-      from: './public/',
-      to: './',
-    }
-  ]),
+  // new CopyWebpackPlugin([
+  //   {
+  //     from: './public/',
+  //     to: './',
+  //   }
+  // ]),
 ]
 
 let mode = 'development'
