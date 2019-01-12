@@ -29,12 +29,12 @@ body
   color: #333
   padding: 0
   margin: 0
-  font-family: Inconsolata
+  font-family: Inconsolata, monospace
 textarea
   border: none
-  font-family: Inconsolata
+  font-family: Inconsolata, monospace
 pre, code, tt
-  font-family: Inconsolata
+  font-family: Inconsolata, monospace
   font-size: rem(1)
   margin: 0
   padding: rem(0.3)
@@ -87,15 +87,15 @@ pre, code, tt
         margin: rem(0.2) rem(0.5)
         padding: rem(0.1) rem(0.8)
 
-.table-col
+.col
   display: flex
   flex-direction: column
-.table-row
+.row
   display: flex
   flex-direction: row
 .border
   border: solid 1px gray
-.table-cell
+.cell
   margin: 0
   padding: 0
   &.grow1
@@ -115,7 +115,7 @@ pre, code, tt
 .file
   background-color: #fff
   margin: rem(2) 0
-  font-family: Inconsolata
+  font-family: Inconsolata, monospace
   .name
     padding: rem(0.6) rem(1)
   .error

@@ -7,14 +7,10 @@ html(lang="ja")
       link(rel="stylesheet" href="style.css")
     - else
       script(src="style.js")
-    title !!!TITLE!!!
+    title .mpls to chapter
     script(src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js")
-    script(src="/mpls.js")
-    script(src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js")
-    // script(type="text/javascript").
-    //   console.log("Hello")
+    script(src="https://unpkg.com/@yagisumi/mpls")
   body
-    // comment
     .header.theme.center .mpls to chapter
     #app.container
       .droparea(:class="{ dropped: isDropped(), dragover: isDragOver }")
@@ -23,36 +19,36 @@ html(lang="ja")
           label Select File...
             input(type="file" multiple @change="selected")
       .mpls_list(v-if="mpls_ary.length > 0")
-        .file.table-col.border.shadow(v-for="(item, idx) in mpls_ary" :key="idx")
-          .name.table-cell.grow1.theme
+        .file.col.border.shadow(v-for="(item, idx) in mpls_ary" :key="idx")
+          .name.cell.grow1.theme
             | {{ item.name }}
-          pre.error.table-cell.grow1.padding(v-if="item.error")
+          pre.error.cell.grow1.padding(v-if="item.error")
             | {{ error_message(item.error) }}
-          .mpls.table-cell.grow1.table-col(v-else)
-            pre.info.table-cell.grow1.padding.border-bottom {{ stream_info(item.mpls) }}
-            .table-cell.grow1.table-row
-              pre.chapters.table-cell.padding {{ chapters_info(item.mpls) }}
-              .output.table-cell.grow1.border-left.table-col
-                ul.tabs.table-cell.table-row
-                  li.tab.table-cell(:class="{selected: selectedTab === 'ogg'}")
+          .mpls.cell.grow1.col(v-else)
+            pre.info.cell.grow1.padding.border-bottom {{ stream_info(item.mpls) }}
+            .cell.grow1.row
+              pre.chapters.cell.padding {{ chapters_info(item.mpls) }}
+              .output.cell.grow1.border-left.col
+                ul.tabs.cell.row
+                  li.tab.cell(:class="{selected: selectedTab === 'ogg'}")
                     a(@click.prepend.stop="selectedTab = 'ogg'") OGG (txt)
-                  li.tab.table-cell(:class="{selected: selectedTab === 'simple'}")
+                  li.tab.cell(:class="{selected: selectedTab === 'simple'}")
                     a(@click.prepend.stop="selectedTab = 'simple'") SIMPLE (txt)
-                  li.tab.table-cell(:class="{selected: selectedTab === 'dump'}")
+                  li.tab.cell(:class="{selected: selectedTab === 'dump'}")
                     a(@click.prepend.stop="selectedTab = 'dump'") DUMP (json)
-                textarea.table-cell.grow1(readonly v-show="selectedTab === 'ogg'") {{ output_ogg(item.mpls) }}
-                textarea.table-cell.grow1(readonly v-show="selectedTab === 'simple'") {{ output_simple(item.mpls) }}
-                textarea.table-cell.grow1(readonly v-show="selectedTab === 'dump'") {{ output_dump(item.mpls) }}
-            .down-link.table-cell.grow1.right.border-top.padding
-              .table-cell(v-show="selectedTab === 'ogg'")
-                span {{ item.name + "-OGG.txt" }}
-                a(:download="name(item, '-OGG.txt')" @click.stop="download" data-mime="text/plain" :data-text="output_ogg(item.mpls)") Download
-              .table-cell(v-show="selectedTab === 'simple'")
-                span {{ item.name + "-SIMPLE.txt" }}
-                a(:download="name(item, '-SIMPLE.txt')" @click.stop="download" data-mime="text/plain" :data-text="output_simple(item.mpls)") Download
-              .table-cell(v-show="selectedTab === 'dump'")
-                span {{ item.name + "-DUMP.json" }}
-                a(:download="name(item, '-DUMP.json')" @click.stop="download" data-mime="application/json" :data-text="output_dump(item.mpls)") Download
+                textarea.cell.grow1(readonly v-show="selectedTab === 'ogg'") {{ output_ogg(item.mpls) }}
+                textarea.cell.grow1(readonly v-show="selectedTab === 'simple'") {{ output_simple(item.mpls) }}
+                textarea.cell.grow1(readonly v-show="selectedTab === 'dump'") {{ output_dump(item.mpls) }}
+            .down-link.cell.grow1.right.border-top.padding
+              .cell(v-show="selectedTab === 'ogg'")
+                span {{ item.name + '-OGG.txt' }}
+                a(:download="item.name + '-OGG.txt'" @click.stop :href="content_url(output_ogg(item.mpls), 'text/plain')") Download
+              .cell(v-show="selectedTab === 'simple'")
+                span {{ item.name + '-SIMPLE.txt' }}
+                a(:download="item.name + '-SIMPLE.txt'" @click.stop :href="content_url(output_simple(item.mpls), 'text/plain')") Download
+              .cell(v-show="selectedTab === 'dump'")
+                span {{ item.name + '-DUMP.json' }}
+                a(:download="item.name + '-DUMP.json'" @click.stop :href="content_url(output_dump(item.mpls), 'application/json')") Download
     script(src="main.js")
 
 

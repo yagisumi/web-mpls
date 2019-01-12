@@ -26,9 +26,6 @@ new Vue({
     return new AppData()
   },
   methods: {
-    name(item: FileInfo, suffix: string) {
-      return `${item.name}${suffix}`
-    },
     error_message(error: Error) {
       return error.stack || error.message
     },
@@ -127,6 +124,10 @@ new Vue({
         elem.href = URL.createObjectURL(blob)
       }
     },
+    content_url(text: string, mime: string) {
+      const blob = new Blob([text], { type: mime })
+      return URL.createObjectURL(blob)
+    },
     dragenter(event: DragEvent) {
       this.drag_counter += 1
 
@@ -206,6 +207,7 @@ new Vue({
               mpls: dump,
             })
           } catch (error) {
+            console.error(error)
             this.mpls_ary.push({
               name: file.name,
               error: error,
